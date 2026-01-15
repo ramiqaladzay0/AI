@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rami.ai | ژیری دەستکرد</title>
+    <link rel="icon" type="image/png" href="https://github.com/ramiqaladzay0/Rami/blob/main/C240F28D-CAFC-4D8A-8E1D-CC11347D3A05.png?raw=true">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body { 
+            font-family: 'Noto Sans Arabic', sans-serif; 
+            background-color: #0a0a0a;
+            color: #e5e7eb;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .bg-kurdish {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(10, 10, 10, 0.95), rgba(20, 20, 20, 0.9)),
+                        url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6xzAgR5P3vdmaeliYmC92AFTCt3M2jqMXk9htlTnSEQ&s=10');
+            background-size: cover;
+            background-position: center;
+            filter: blur(80px);
+            z-index: -1;
+        }
+
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px 16px;
+        }
+
+        @media (min-width: 768px) {
+            .chat-container {
+                padding-left: 20%;
+                padding-right: 20%;
+            }
+        }
+
+        .chat-container::-webkit-scrollbar { 
+            width: 5px; 
+        }
+        
+        .chat-container::-webkit-scrollbar-thumb { 
+            background: rgba(255,255,255,0.1); 
+            border-radius: 10px; 
+        }
+
+        .user-bubble {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border-radius: 20px 20px 4px 20px;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
+            padding: 12px 20px;
+            max-width: 85%;
+            font-size: 16px;
+        }
+
+        .ai-bubble {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px 20px 20px 4px;
+            padding: 16px 20px;
+            color: #e5e7eb;
+            line-height: 1.6;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .message {
+            margin: 16px 0;
+            display: flex;
+            width: 100%;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message.assistant {
+            justify-content: flex-start;
+        }
+
+        .ai-message-wrapper {
+            display: flex;
+            gap: 16px;
+            max-width: 90%;
+            align-items: flex-end;
+        }
+
+        .ai-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            flex-shrink: 0;
+            margin-bottom: 4px;
+        }
+
+        .input-area {
+            background: rgba(20, 20, 20, 0.8);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 24px 16px;
+        }
+
+        @media (min-width: 768px) {
+            .input-area {
+                padding-left: 20%;
+                padding-right: 20%;
+            }
+        }
+
+        .input-container {
+            max-width: 1024px;
+            margin: 0 auto;
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .input-container:focus-within {
+            border-color: rgba(37, 99, 235, 0.5);
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+        }
+
+        .input-container input {
+            flex: 1;
+            background: transparent;
+            outline: none;
+            color: white;
+            padding: 12px 16px;
+            font-size: 18px;
+            border: none;
+        }
+
+        .input-container input::placeholder {
+            color: #9ca3af;
+        }
+
+        .send-button {
+            background: #2563eb;
+            color: white;
+            padding: 12px;
+            border-radius: 16px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .send-button:hover {
+            background: #3b82f6;
+        }
+
+        .send-button svg {
+            width: 24px;
+            height: 24px;
+            transition: transform 0.3s ease;
+        }
+
+        .send-button:hover svg {
+            transform: translateX(-4px);
+        }
+
+        .typing-animation::after {
+            content: '...';
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink { 
+            0%, 100% { opacity: 0; } 
+            50% { opacity: 1; } 
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 50;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-container {
+            position: relative;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .online-indicator {
+            position: absolute;
+            bottom: -4px;
+            right: -4px;
+            width: 16px;
+            height: 16px;
+            background: #10b981;
+            border: 2px solid #0a0a0a;
+            border-radius: 50%;
+        }
+
+        .header-title h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: white;
+        }
+
+        .header-title h1 .ai-badge {
+            color: #3b82f6;
+            font-size: 14px;
+        }
+
+        .header-title p {
+            font-size: 10px;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .header-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            opacity: 0.5;
+        }
+
+        .dot.red { background: #ef4444; }
+        .dot.yellow { background: #eab308; }
+        .dot.green { background: #10b981; }
+
+        .welcome-screen {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 24px;
+        }
+
+        .welcome-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(37, 99, 235, 0.1);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(37, 99, 235, 0.2);
+            margin-bottom: 16px;
+        }
+
+        .welcome-icon svg {
+            width: 40px;
+            height: 40px;
+            color: #3b82f6;
+        }
+
+        .welcome-screen h2 {
+            font-size: 36px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .welcome-screen p {
+            color: #9ca3af;
+            max-width: 420px;
+            line-height: 1.6;
+        }
+
+        .suggestions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            width: 100%;
+            max-width: 448px;
+            padding-top: 32px;
+        }
+
+        .suggestion-btn {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 12px;
+            font-size: 12px;
+            color: #d1d5db;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: right;
+        }
+
+        .suggestion-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .footer-note {
+            font-size: 9px;
+            text-align: center;
+            margin-top: 12px;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-kurdish"></div>
+
+    <header>
+        <div class="header-left">
+            <div class="logo-container">
+                <img src="https://github.com/ramiqaladzay0/Rami/blob/main/C240F28D-CAFC-4D8A-8E1D-CC11347D3A05.png?raw=true" 
+                     class="logo" alt="Rami AI Logo">
+                <div class="online-indicator"></div>
+            </div>
+            <div class="header-title">
+                <h1>ڕامی <span class="ai-badge">AI</span></h1>
+                <p>Kurdish Intelligent System</p>
+            </div>
+        </div>
+        <div class="header-dots">
+            <div class="dot red"></div>
+            <div class="dot yellow"></div>
+            <div class="dot green"></div>
+        </div>
+    </header>
+
+    <main id="chat-container" class="chat-container">
+        <div id="welcome-screen" class="welcome-screen">
+            <div class="welcome-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+            </div>
+            <h2>سڵاو، من ڕامیم</h2>
+            <p>یاریدەدەرێکی زیرەکم بۆ وەڵامدانەوەی هەموو پرسیارەکانت بە زمانی شیرینی کوردی.</p>
+            
+            <div class="suggestions">
+                <button onclick="fillInput('چۆن فێری پڕۆگرامسازی ببم؟')" class="suggestion-btn">💡 فێربوونی پڕۆگرامسازی</button>
+                <button onclick="fillInput('کورتەیەک باسی مێژووی کورد بکە')" class="suggestion-btn">📜 مێژووی کورد</button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="input-area">
+        <div class="input-container">
+            <input id="user-input" type="text" 
+                   onkeypress="if(event.key === 'Enter') askRami()"
+                   placeholder="هەر شتێکت لە دڵە لێرە بیپرسە...">
+            
+            <button onclick="askRami()" class="send-button">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                </svg>
+            </button>
+        </div>
+        <p class="footer-note">Rami AI - First Ai of Qaladze</p>
+    </footer>
+
+    <script type="module">
+        // ڕێکخستنەکانی سەرەکی
+        const API_KEY = "AIzaSyBkaG25zoDMADLkWaK9vFS3aSYCScEJ844";
+        const SHEET_URL = "https://script.google.com/macros/s/AKfycbw9BstYmzi4yyvDYvKtQX0fJNkz50aWFVrDfFtdqleFYYBkNODXl3ZSWBqZZM8Bl2cljA/exec";
+        
+        // پڕکردنەوەی خانەی پرسیار
+        window.fillInput = function(text) {
+            document.getElementById('user-input').value = text;
+            document.getElementById('user-input').focus();
+        }
+
+        // ناردنی پرسیار بۆ ڕامی
+        window.askRami = async function() {
+            const inputField = document.getElementById('user-input');
+            const message = inputField.value.trim();
+            if (!message) return;
+
+            document.getElementById('welcome-screen').classList.add('hidden');
+            appendMessage('user', message);
+            inputField.value = '';
+
+            const loadingId = appendLoading();
+
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    contents: [{ 
+                        parts: [{ 
+                            text: "تۆ ناوت ڕامییە. وەک یاریدەدەرێکی زۆر زیرەک و دۆستانە بە کوردی سۆرانی وەڵام بدەرەوە: " + message 
+                        }] 
+                    }]
+                })
+            });
+
+            const data = await response.json();
+            removeLoading(loadingId);
+
+            const aiResponse = data.candidates[0].content.parts[0].text;
+            appendMessage('assistant', aiResponse);
+            saveToSheet(message, aiResponse);
+        }
+
+        // پیشاندانی پەیام
+        function appendMessage(role, text) {
+            const container = document.getElementById('chat-container');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}`;
+            
+            if (role === 'user') {
+                messageDiv.innerHTML = `<div class="user-bubble">${escapeHtml(text)}</div>`;
+            } else {
+                messageDiv.innerHTML = `
+                    <div class="ai-message-wrapper">
+                        <img src="https://github.com/ramiqaladzay0/Rami/blob/main/C240F28D-CAFC-4D8A-8E1D-CC11347D3A05.png?raw=true" class="ai-avatar" alt="AI">
+                        <div class="ai-bubble">${escapeHtml(text).replace(/\n/g, '<br>')}</div>
+                    </div>
+                `;
+            }
+            
+            container.appendChild(messageDiv);
+            container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+        }
+
+        // پیشاندانی ئەنیمەیشنی چاوەڕوانبە
+        function appendLoading() {
+            const id = 'loading-' + Date.now();
+            const container = document.getElementById('chat-container');
+            const div = document.createElement('div');
+            div.id = id;
+            div.className = 'message assistant';
+            div.innerHTML = `
+                <div class="ai-message-wrapper">
+                    <img src="https://github.com/ramiqaladzay0/Rami/blob/main/C240F28D-CAFC-4D8A-8E1D-CC11347D3A05.png?raw=true" class="ai-avatar" alt="AI">
+                    <div class="ai-bubble" style="color: #9ca3af; font-style: italic; font-size: 14px;">
+                        <span class="typing-animation">ڕامی دەنووسێت</span>
+                    </div>
+                </div>
+            `;
+            container.appendChild(div);
+            container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+            return id;
+        }
+
+        // لابردنی ئەنیمەیشنی چاوەڕوانبە
+        function removeLoading(id) {
+            document.getElementById(id)?.remove();
+        }
+
+        // پاشەکەوتکردن لە Google Sheets
+        function saveToSheet(u, a) {
+            fetch(SHEET_URL, { 
+                method: "POST", 
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ 
+                    timestamp: new Date().toLocaleString('en-US', {timeZone: 'Asia/Baghdad'}),
+                    user: u, 
+                    ai: a 
+                }) 
+            }).catch(() => {});
+        }
+
+        // پارێزگاری لە XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
