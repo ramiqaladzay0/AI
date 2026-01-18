@@ -411,18 +411,19 @@
         <p class="footer-note">Rami AI - First Ai of Qaladze</p>
     </footer>
 
+    <script src="https://cdn.botpress.cloud/webchat/v3.5/inject.js"></script>
+    <script src="https://files.bpcontent.cloud/2026/01/18/17/20260118175449-PJLIEZS4.js" defer></script>
+
     <script type="module">
-        // ڕێکخستنەکانی سەرەکی
+        // کۆدە کانی تۆ لێرەوە دەست پێدەکەنەوە بێ دەستکاری
         const API_KEY = "AIzaSyBkaG25zoDMADLkWaK9vFS3aSYCScEJ844";
         const SHEET_URL = "https://script.google.com/macros/s/AKfycbw9BstYmzi4yyvDYvKtQX0fJNkz50aWFVrDfFtdqleFYYBkNODXl3ZSWBqZZM8Bl2cljA/exec";
         
-        // پڕکردنەوەی خانەی پرسیار
         window.fillInput = function(text) {
             document.getElementById('user-input').value = text;
             document.getElementById('user-input').focus();
         }
 
-        // ناردنی پرسیار بۆ ڕامی
         window.askRami = async function() {
             const inputField = document.getElementById('user-input');
             const message = inputField.value.trim();
@@ -454,7 +455,6 @@
             saveToSheet(message, aiResponse);
         }
 
-        // پیشاندانی پەیام
         function appendMessage(role, text) {
             const container = document.getElementById('chat-container');
             const messageDiv = document.createElement('div');
@@ -475,7 +475,6 @@
             container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
         }
 
-        // پیشاندانی ئەنیمەیشنی چاوەڕوانبە
         function appendLoading() {
             const id = 'loading-' + Date.now();
             const container = document.getElementById('chat-container');
@@ -495,12 +494,10 @@
             return id;
         }
 
-        // لابردنی ئەنیمەیشنی چاوەڕوانبە
         function removeLoading(id) {
             document.getElementById(id)?.remove();
         }
 
-        // پاشەکەوتکردن لە Google Sheets
         function saveToSheet(u, a) {
             fetch(SHEET_URL, { 
                 method: "POST", 
@@ -514,7 +511,6 @@
             }).catch(() => {});
         }
 
-        // پارێزگاری لە XSS
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
