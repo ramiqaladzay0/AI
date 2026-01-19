@@ -2,7 +2,7 @@
 <html lang="ku" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Rami.ai | ژیری دەستکرد</title>
     <link rel="icon" type="image/png" href="https://github.com/ramiqaladzay0/Rami/blob/main/C240F28D-CAFC-4D8A-8E1D-CC11347D3A05.png?raw=true">
     <style>
@@ -17,8 +17,7 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
-            /* لێرەدا کێشەی سکرۆڵی گشتی چاککراوە */
-            overflow: hidden; 
+            overflow: hidden; /* ڕێگری لە سکرۆڵی لاوەکی */
         }
 
         .bg-kurdish {
@@ -32,15 +31,11 @@
             z-index: -1;
         }
 
-        /* بەشی چاتەکە چاککراوە بۆ ئەوەی سکرۆڵ بکات بێ ئەوەی سێرچەکە دابگریت */
         .chat-container {
             flex: 1;
-            overflow-y: auto;
+            overflow-y: auto; /* لێرەدا سکرۆڵ چاککراوە */
             padding: 24px 16px;
-            display: flex;
-            flex-direction: column;
             scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch; /* بۆ سکرۆڵی باشتر لە ئایفۆن */
         }
 
         @media (min-width: 768px) {
@@ -54,7 +49,7 @@
             padding: 12px 20px;
             max-width: 85%;
             font-size: 16px;
-            word-wrap: break-word;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
         }
 
         .ai-bubble {
@@ -64,32 +59,29 @@
             padding: 16px 20px;
             color: #e5e7eb;
             line-height: 1.6;
-            word-wrap: break-word;
         }
 
-        .message { margin: 16px 0; display: flex; width: 100%; }
+        .message { margin: 16px 0; display: flex; width: 100%; animation: fadeIn 0.5s ease-in; }
         .message.user { justify-content: flex-end; }
         .message.assistant { justify-content: flex-start; }
-        .ai-message-wrapper { display: flex; gap: 12px; max-width: 90%; align-items: flex-end; }
+        .ai-message-wrapper { display: flex; gap: 16px; max-width: 90%; align-items: flex-end; }
         .ai-avatar { width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0; }
 
         .input-area {
-            background: rgba(20, 20, 20, 0.9);
+            background: rgba(20, 20, 20, 0.8);
             backdrop-filter: blur(20px);
             border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 16px;
-            z-index: 100;
+            padding: 24px 16px;
         }
 
         .input-container {
             max-width: 1024px;
             margin: 0 auto;
             display: flex;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 24px;
-            padding: 6px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px;
         }
 
         .input-container input {
@@ -97,68 +89,59 @@
             background: transparent;
             border: none;
             color: white;
-            padding: 10px 15px;
-            font-size: 16px;
+            padding: 12px 16px;
+            font-size: 18px;
             outline: none;
         }
 
         .send-button {
             background: #2563eb;
+            color: white;
+            padding: 12px;
+            border-radius: 16px;
             border: none;
-            padding: 10px;
-            border-radius: 50%;
             cursor: pointer;
-            display: flex;
-            align-items: center;
         }
 
-        header { padding: 15px 20px; display: flex; align-items: center; gap: 12px; }
-        .logo { width: 40px; height: 40px; border-radius: 12px; }
-
-        .welcome-screen {
-            margin: auto;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .hidden { display: none !important; }
+        header { padding: 20px; display: flex; align-items: center; gap: 16px; }
+        .logo { width: 48px; height: 48px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.2); }
         
-        /* ئەنیمەیشنی نووسین */
-        .typing::after { content: '...'; animation: blink 1s infinite; }
+        .welcome-screen { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 24px; }
+        .hidden { display: none !important; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .typing::after { content: '...'; animation: blink 1.5s infinite; }
         @keyframes blink { 50% { opacity: 0; } }
     </style>
 </head>
 <body>
-
     <div class="bg-kurdish"></div>
-
     <header>
         <img src="https://github.com/ramiqaladzay0/Rami/blob/main/C240F28D-CAFC-4D8A-8E1D-CC11347D3A05.png?raw=true" class="logo">
         <div>
-            <h1 style="font-size: 18px;">ڕامی AI</h1>
-            <p style="font-size: 10px; color: #9ca3af;">پسپۆڕی پۆلی ١١</p>
+            <h1 style="font-size: 20px; font-weight: 700;">ڕامی <span style="color:#3b82f6">AI</span></h1>
+            <p style="font-size: 10px; color: #9ca3af; letter-spacing: 0.1em;">Kurdish Intelligent System</p>
         </div>
     </header>
 
     <main id="chat-container" class="chat-container">
         <div id="welcome-screen" class="welcome-screen">
-            <h2 style="font-size: 28px; margin-bottom: 10px;">سڵاو، من ڕامیم</h2>
-            <p style="color: #9ca3af;">وەڵامی مەلزەمەکانی (عەرەبی م.سیروان، کوردی م.عومەر، ئینگلیزی یوسف ڕەسوڵ) دەدەمەوە.</p>
+            <h2 style="font-size: 32px;">سڵاو، من ڕامیم</h2>
+            <p style="color: #9ca3af; max-width: 400px;">وەڵامی مەلزەمەکانی (عەرەبی م.سیروان، کوردی م.عومەر، ئینگلیزی یوسف ڕەسوڵ) دەدەمەوە.</p>
         </div>
     </main>
 
     <footer class="input-area">
         <div class="input-container">
-            <input id="user-input" type="text" placeholder="چی دەپرسی؟..." onkeypress="if(event.key === 'Enter') askRami()">
+            <input id="user-input" type="text" placeholder="هەر شتێکت لە دڵە بپرسە..." onkeypress="if(event.key === 'Enter') askRami()">
             <button onclick="askRami()" class="send-button">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </button>
         </div>
     </footer>
 
     <script type="module">
-        // کلیلی نوێی فێرکراو
-        const API_KEY = "AIzaSyBkaG25zoDMADLkWaK9vFS3aSYCScEJ844"; 
+        const API_KEY = "AIzaSyBkaG25zoDMADLkWaK9vFS3aSYCScEJ844";
 
         window.askRami = async function() {
             const inputField = document.getElementById('user-input');
@@ -171,31 +154,27 @@
 
             const loadingId = appendLoading();
 
-            // لێرەدا زانیاری مەلزەمەکان ڕاستەوخۆ دەدەین بە مێشکی AI-یەکە
-            const instruction = `تۆ ناوت ڕامییە. یاریدەدەری زیرەکی وێبسایتی Rami AI لە قەڵادزێ.
-            تۆ مێشکت پڕە لە زانیاری ئەم مەلزەمانەی پۆلی ١١:
-            ١. عەرەبی (م. سیروان عبد الرحمن): تەواوی قواعد و ئەدەب.
-            ٢. کوردی (م. عومەر ئەحمەد خدر): ڕێزمان و ئەدەبی وەرزی ١ و ٢.
-            ٣. ئینگلیزی (یوسف ڕەسوڵ): Sunrise 11 وەک Stating dimensions و هەموو یونیتەکان.
-            وەڵامەکانت با کورت و زۆر ورد بن ڕێک وەک ناو مەلزەمەکان. بە زمانی کوردی سۆرانی وەڵام بدەرەوە.`;
-
             try {
                 const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        contents: [{ parts: [{ text: instruction + "\nپرسیار: " + message }] }]
+                        contents: [{ parts: [{ text: `تۆ ڕامییت، پسپۆڕی پۆلی 11. زانیاری ئەم مەلزەمانەت هەیە: عەرەبی (سیروان عبدالرحمن)، کوردی (عومەر ئەحمەد خدر)، ئینگلیزی (یوسف ڕەسوڵ وەک Stating dimensions). بە کوردی سۆرانی وەڵام بدەرەوە بۆ ئەم پرسیارە: ${message}` }] }]
                     })
                 });
 
                 const data = await response.json();
                 removeLoading(loadingId);
 
-                const aiResponse = data.candidates[0].content.parts[0].text;
-                appendMessage('assistant', aiResponse);
-            } catch (error) {
+                if (data.candidates && data.candidates[0].content) {
+                    const aiResponse = data.candidates[0].content.parts[0].text;
+                    appendMessage('assistant', aiResponse);
+                } else {
+                    appendMessage('assistant', "ببورە، کێشەیەک لە سێرڤەر هەیە.");
+                }
+            } catch (e) {
                 removeLoading(loadingId);
-                appendMessage('assistant', "ببورە، کێشەیەک لە هێڵەکەت هەیە.");
+                appendMessage('assistant', "هێڵەکەت بپشکنە.");
             }
         }
 
@@ -203,36 +182,27 @@
             const container = document.getElementById('chat-container');
             const div = document.createElement('div');
             div.className = `message ${role}`;
-            
             if (role === 'user') {
                 div.innerHTML = `<div class="user-bubble">${text}</div>`;
             } else {
-                div.innerHTML = `
-                    <div class="ai-message-wrapper">
-                        <img src="https://github.com/ramiqaladzay0/Rami/blob/main/C240F28D-CAFC-4D8A-8E1D-CC11347D3A05.png?raw=true" class="ai-avatar">
-                        <div class="ai-bubble">${text.replace(/\n/g, '<br>')}</div>
-                    </div>`;
+                div.innerHTML = `<div class="ai-message-wrapper"><img src="https://github.com/ramiqaladzay0/Rami/blob/main/C240F28D-CAFC-4D8A-8E1D-CC11347D3A05.png?raw=true" class="ai-avatar"><div class="ai-bubble">${text.replace(/\n/g, '<br>')}</div></div>`;
             }
             container.appendChild(div);
-            // سکرۆڵ کردنی ئۆتۆماتیکی بۆ خوارەوە
-            container.scrollTop = container.scrollHeight;
+            container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
         }
 
         function appendLoading() {
-            const id = 'loading-' + Date.now();
+            const id = 'load-' + Date.now();
             const container = document.getElementById('chat-container');
             const div = document.createElement('div');
-            div.id = id;
-            div.className = 'message assistant';
+            div.id = id; div.className = 'message assistant';
             div.innerHTML = `<div class="ai-message-wrapper"><div class="ai-bubble typing">ڕامی دەنووسێت</div></div>`;
             container.appendChild(div);
             container.scrollTop = container.scrollHeight;
             return id;
         }
 
-        function removeLoading(id) {
-            document.getElementById(id)?.remove();
-        }
+        function removeLoading(id) { document.getElementById(id)?.remove(); }
     </script>
 </body>
 </html>
