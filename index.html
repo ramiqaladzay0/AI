@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rami.ai | زیرەکی دەستکردی ١١ی جیم</title>
+    <title>Rami GPT |  V8</title>
     <link rel="icon" type="image/png" href="https://github.com/ramiqaladzay0/Rami/blob/main/C240F28D-CAFC-4D8A-8E1D-CC11347D3A05.png?raw=true">
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -12,16 +12,37 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;700&display=swap');
         
+        :root {
+            --bg-color: #0a0a0a;
+            --text-color: #e5e7eb;
+            --container-bg: rgba(20, 20, 20, 0.8);
+            --bubble-ai: rgba(255, 255, 255, 0.05);
+            --input-bg: rgba(255, 255, 255, 0.03);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --code-bg: #1e1e1e;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f3f4f6;
+            --text-color: #1f2937;
+            --container-bg: rgba(255, 255, 255, 0.9);
+            --bubble-ai: #ffffff;
+            --input-bg: #f9fafb;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --code-bg: #e5e7eb;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         
         body { 
             font-family: 'Noto Sans Arabic', sans-serif; 
-            background-color: #0a0a0a;
-            color: #e5e7eb;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             height: 100vh;
             display: flex;
             flex-direction: column;
@@ -37,6 +58,10 @@
             background-position: center;
             filter: blur(80px);
             z-index: -1;
+        }
+
+        [data-theme="light"] .bg-kurdish {
+            background: linear-gradient(135deg, rgba(243, 244, 246, 0.95), rgba(229, 231, 235, 0.9));
         }
 
         .chat-container {
@@ -58,7 +83,7 @@
         }
         
         .chat-container::-webkit-scrollbar-thumb { 
-            background: rgba(255,255,255,0.1); 
+            background: rgba(150,150,150,0.2); 
             border-radius: 10px; 
         }
 
@@ -73,18 +98,60 @@
         }
 
         .ai-bubble {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: var(--bubble-ai);
+            border: 1px solid var(--border-color);
             border-radius: 20px 20px 20px 4px;
             padding: 16px 20px;
-            color: #e5e7eb;
+            color: var(--text-color);
             line-height: 1.6;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            width: 100%;
+        }
+
+        /* شێوازی کۆد */
+        pre {
+            background: var(--code-bg);
+            padding: 15px;
+            border-radius: 12px;
+            overflow-x: auto;
+            direction: ltr;
+            position: relative;
+            margin: 10px 0;
+            border: 1px solid var(--border-color);
+        }
+
+        code {
+            font-family: 'Consolas', monospace;
+            font-size: 14px;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            cursor: pointer;
+        }
+
+        /* شێوازی یاسا و هاوکێشەکان */
+        .math-block {
+            background: rgba(59, 130, 246, 0.1);
+            border-right: 4px solid #3b82f6;
+            padding: 10px;
+            margin: 10px 0;
+            font-style: italic;
+            display: block;
+            text-align: center;
         }
 
         .ai-bubble p { margin-bottom: 8px; }
         .ai-bubble ul, .ai-bubble ol { padding-right: 25px; margin-bottom: 8px; }
-        .ai-bubble strong { color: #fff; font-weight: bold; }
+        .ai-bubble strong { color: inherit; font-weight: bold; }
 
         .message {
             margin: 16px 0;
@@ -106,21 +173,22 @@
             gap: 16px;
             max-width: 90%;
             align-items: flex-end;
+            width: 100%;
         }
 
         .ai-avatar {
             width: 32px;
             height: 32px;
             border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
             flex-shrink: 0;
             margin-bottom: 4px;
         }
 
         .input-area {
-            background: rgba(20, 20, 20, 0.8);
+            background: var(--container-bg);
             backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid var(--border-color);
             padding: 24px 16px;
         }
 
@@ -131,98 +199,61 @@
             }
         }
 
-        .input-container {
-            max-width: 1024px;
-            margin: 0 auto;
-            position: relative;
-            display: flex;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 24px;
-            padding: 8px;
-            transition: all 0.3s ease;
+                /* Input Area - Gemini Style */
+        .input-area {
+            padding: 16px 16px 32px 16px;
+            background: var(--bg-color);
+        }
+        @media (min-width: 768px) {
+            .input-area { padding-left: 20%; padding-right: 20%; }
         }
 
-        .input-container:focus-within {
-            border-color: rgba(37, 99, 235, 0.5);
-            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+        .input-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--input-bg);
+            border-radius: 32px;
+            display: flex;
+            align-items: center;
+            padding: 6px 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            border: 1px solid transparent;
         }
+        .input-container:focus-within {
+            border-color: var(--border-color);
+            background: #28292a;
+        }
+        [data-theme="light"] .input-container:focus-within { background: #e9eef6; }
 
         .input-container input {
             flex: 1;
             background: transparent;
-            outline: none;
-            color: white;
-            padding: 12px 16px;
-            font-size: 18px;
             border: none;
+            outline: none;
+            color: var(--text-color);
+            padding: 12px 16px;
+            font-size: 16px;
         }
 
-        .input-container input::placeholder {
-            color: #9ca3af;
-        }
-
-        .send-button {
-            background: #2563eb;
-            color: white;
-            padding: 12px;
-            border-radius: 16px;
+        .send-button, .mic-button {
+            background: transparent;
+            color: var(--text-color);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
             border: none;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: background 0.2s;
         }
+        .send-button:hover, .mic-button:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        [data-theme="light"] .send-button:hover { background: rgba(0,0,0,0.05); }
 
-        .send-button:hover {
-            background: #3b82f6;
-        }
-
-        .send-button svg {
-            width: 24px;
-            height: 24px;
-            transition: transform 0.3s ease;
-        }
-
-        .send-button:hover svg {
-            transform: translateX(-4px);
-        }
-
-        .typing-dots {
-            display: flex;
-            gap: 4px;
-            align-items: center;
-            height: 24px;
-        }
-        .typing-dots div {
-            width: 6px;
-            height: 6px;
-            background: #3b82f6;
-            border-radius: 50%;
-            animation: dot-pulse 1.5s infinite ease-in-out;
-        }
-        .typing-dots div:nth-child(2) { animation-delay: 0.2s; }
-        .typing-dots div:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes dot-pulse {
-            0%, 100% { transform: scale(0.8); opacity: 0.5; }
-            50% { transform: scale(1.2); opacity: 1; }
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+        .send-button svg { width: 24px; height: 24px; color: #8ab4f8; }
 
         header {
             padding: 20px;
@@ -246,18 +277,18 @@
             width: 48px;
             height: 48px;
             border-radius: 16px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            border: 1px solid var(--border-color);
         }
 
         .online-indicator {
             position: absolute;
             bottom: -4px;
             right: -4px;
-            width: 16px;
-            height: 16px;
+            width: 15px;
+            height: 15px;
             background: #10b981;
-            border: 2px solid #0a0a0a;
+            border: 2px solid var(--bg-color);
             border-radius: 50%;
         }
 
@@ -265,16 +296,16 @@
             font-size: 20px;
             font-weight: 700;
             letter-spacing: -0.02em;
-            color: white;
+            color: var(--text-color);
         }
 
         .header-title h1 .ai-badge {
             color: #3b82f6;
-            font-size: 14px;
+            font-size: 12px;
         }
 
         .header-title p {
-            font-size: 10px;
+            font-size: 8px;
             color: #9ca3af;
             text-transform: uppercase;
             letter-spacing: 0.1em;
@@ -286,6 +317,20 @@
             align-items: center;
         }
 
+        .theme-toggle {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 8px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+        }
+        .theme-toggle:hover { background: var(--bubble-ai); }
+
         .dot {
             width: 8px;
             height: 8px;
@@ -296,23 +341,24 @@
         .dot.red { background: #ef4444; }
         .dot.white { background: #FFFFFF; }
         .dot.yellow { background: #eab308; }
+        .dot.white { background: #FFFFFF; }
         .dot.green { background: #10b981; }
 
         .history-btn {
             background: transparent;
-            border: 1px solid rgba(255,255,255,0.1);
-            color: #e5e7eb;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
             display: flex;
             align-items: center;
             gap: 6px;
-            padding: 6px 12px;
-            border-radius: 12px;
+            padding: 5px 10px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 10px;
             transition: 0.3s;
-            margin-right: 10px;
+            margin-right: 9px;
         }
-        .history-btn:hover { background: rgba(255,255,255,0.1); }
+        .history-btn:hover { background: var(--bubble-ai); }
 
         .welcome-screen {
             height: 100%;
@@ -345,7 +391,7 @@
         .welcome-screen h2 {
             font-size: 36px;
             font-weight: 700;
-            color: white;
+            color: var(--text-color);
         }
 
         .welcome-screen p {
@@ -364,20 +410,20 @@
         }
 
         .suggestion-btn {
-            background: rgba(255, 255, 255, 0.03);
+            background: var(--input-bg);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-color);
             border-radius: 24px;
             padding: 12px;
             font-size: 12px;
-            color: #d1d5db;
+            color: var(--text-color);
             cursor: pointer;
             transition: all 0.3s ease;
             text-align: right;
         }
 
         .suggestion-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--bubble-ai);
         }
 
         .hidden {
@@ -416,19 +462,19 @@
             top: 80px;
             left: 20px;
             width: 280px;
-            background: rgba(15, 15, 15, 0.95);
+            background: var(--bg-color);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid var(--border-color);
             border-radius: 20px;
             z-index: 1000;
             display: none;
             flex-direction: column;
             max-height: 500px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
         }
         .history-header {
             padding: 15px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -452,14 +498,14 @@
             border-radius: 12px;
             cursor: pointer;
             font-size: 14px;
-            color: #d1d5db;
+            color: var(--text-color);
             transition: 0.2s;
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: 10px;
         }
-        .history-item:hover { background: rgba(255,255,255,0.05); }
+        .history-item:hover { background: var(--bubble-ai); }
         .history-text {
             white-space: nowrap;
             overflow: hidden;
@@ -475,7 +521,7 @@
         .delete-btn:hover { opacity: 1; transform: scale(1.1); }
     </style>
 </head>
-<body>
+<body data-theme="dark">
 
     <div class="bg-kurdish"></div>
 
@@ -487,11 +533,17 @@
                 <div class="online-indicator"></div>
             </div>
             <div class="header-title">
-                <h1>Rami <span class="ai-badge">AI</span></h1>
+                <h1>Rami <span class="ai-badge">GPT</span></h1>
                 <p>باشترین ژیری دەستکرد لەسەر ئاستی قەڵادزێ</p>
             </div>
         </div>
         <div class="header-dots">
+            <button class="theme-toggle" onclick="toggleTheme()" title="گۆڕینی ڕەنگ">
+                <svg id="theme-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
+
             <button class="history-btn" onclick="toggleHistory()">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                 History
@@ -533,13 +585,18 @@
 
     <footer class="input-area">
         <div class="input-container">
+            <button id="mic-btn" onclick="startRecognition()" class="mic-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+            </button>
+            
             <input id="user-input" type="text" 
                    onkeypress="if(event.key === 'Enter') askRami()"
                    placeholder="هەر شتێکت لە دڵە لێرە بیپرسە...">
             
             <button onclick="askRami()" class="send-button">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </button>
+        </div>
                 </svg>
             </button>
         </div>
@@ -558,11 +615,39 @@
         const SB_KEY = "sb_publishable_ZxYk00BEcHCGFATy2SxegA_mrw6d32R";
         const supabase = window.supabase.createClient(SB_URL, SB_KEY);
 
-        const GROQ_API_KEY = "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";
+        const GROQ_API_KEY = "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";
         const SHEET_URL = "https://script.google.com/macros/s/AKfycbw9BstYmzi4yyvDYvKtQX0fJNkz50aWFVrDfFtdqleFYYBkNODXl3ZSWBqZZM8Bl2cljA/exec";
         
         let currentChatId = null;
         let messagesArray = [];
+
+        window.toggleTheme = function() {
+            const body = document.body;
+            const icon = document.getElementById('theme-icon');
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.setAttribute('data-theme', 'light');
+                icon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+            }
+        }
+
+        window.startRecognition = function() {
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'ku-IQ';
+            const micBtn = document.getElementById('mic-btn');
+            
+            recognition.onstart = () => micBtn.classList.add('recording');
+            recognition.onend = () => micBtn.classList.remove('recording');
+            
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById('user-input').value = transcript;
+            };
+            
+            recognition.start();
+        }
 
         window.fillInput = function(text) {
             document.getElementById('user-input').value = text;
@@ -643,47 +728,18 @@
                         "Authorization": `Bearer ${GROQ_API_KEY}`
                     },
                     body: JSON.stringify({
-                        model: "llama-3.3-70b-versatile",
+                        "model": "meta-llama/llama-4-maverick-17b-128e-instruct",
                         messages: [
-                        {role: "system", 
-content: `
-تۆ ناوت "ڕامی"یە، یاریدەدەرێکی زۆر زیرەک، گەرموگوڕ و هاوڕێیانەی بۆ قوتابیانی پۆلی ١١ی زانستی لە ئامادەیی هەژین - قەڵادزێ.
-
---- [بەشی پەیوەندی کۆمەڵایەتی و سڵاو] ---
-- کاتێک بەکارهێنەر سڵاو دەکات، دۆخپرسین دەکات (وەک: سڵاو، سلاو، چۆنی، باشی، چەوایی)، زۆر بە گەرموگوڕی و بە شێوەزاری قەڵادزێی وەڵام بدەوە.
-- پێویستە هەمیشە وشەی "گیان" بەکاربێنیت لە وەڵامی سڵاوەکاندا (بۆ نموونە: سڵاوت لێ بێ ئەوە گیان، زۆر باشم بە قوربان تۆ چۆنی گیان؟، فەرموو گیان چیت پێویستە؟).
-- کەسایەتیت با وەک هاوڕێیەکی نزیک بێت نەک وەک ڕۆبۆتێکی ڕەق.
-
---- [بەشی زانستی: زانیارییەکان تێکەڵ مەکە] ---
-
-[١. بەشی کوردی - ڕێزمان]:
-- تەنها وەڵامی ئەمانە بدەوە: (هاوەڵناوی کراوی داڕژاو، هاوەڵناوی کراوی لێکدراو، هاوەڵکار بە هەموو جۆرەکانییەوە: کات، شوێن، بڕ، چۆنییەتی).
-
-[٢. بەشی زیندەزانی - پۆڵێنکردن]:
-- تەنها وەڵامی ئەمانە بدەوە: (سەرەتاییەکان، پێشەنگەکان، قەوزەکان). 
-- تێبینی: لێرەدا "پێشەنگ" وەک زیندەوەر (Protists) باس بکە نەک وەک زاراوەیەکی تر.
-
-[٣. بەشی فیزیا - تەوژم و وزە]:
-- تەنها وەڵامی ئەمانە بدەوە: (تەوژمی بەهێڵ و بەریەککەوتنەکان، تەوژم و پاڵ، یاسای پاراستنی تەوژمی بەهێڵ، بەریەککەوتنی جیر و ناجیر و پەیوەندییان بە وزەی جوڵەوە).
-
-[٤. بەشی کیمیا - گازەکان]:
-- تەنها وەڵامی ئەمانە بدەوە: (ڕەوشتە فیزیاییەکانی گازەکان، یاسای گازەکان و هەموو وردەکارییەکانی بەشی گاز لە کتێبی پۆلی ١١).
-
-[٥. بەشی بیرکاری - لۆگاریتم و توانی]:
-- تەنها وەڵامی ئەمانە بدەوە: (شیکارکردنی هاوکێشە توانی و لۆگاریتمییەکان، کێشانی نەخشەی توانی و هێڵی، هەژمارکردنی بەها لە نەخشە پەلدارەکاندا).
-
-[٦. بەشی ئینگلیزی - Sunrise 11]:
-- تەنها وەڵامی ئەمانە بدەوە: (Stating dimensions وەک width/height، و جۆرەکانی Conditionals: Zero, First, Second, and Third).
-
-[٧. بەشی عەرەبی - ئەدەب]:
-- تەنها وەڵامی ئەمانە بدەوە: (المسرحية: پێناسەکەی، جۆرەکانی وەک المأساة و الملهاة، و بنەماکانی).
-
---- [یاسا گشتییەکانی ڕەفتار] ---
-- هەمیشە بە زمانی کوردی (شێوەزاری قەڵادزێ و دەوروبەری) قسە بکە.
-- بۆ هەر وەڵامێکی زانستی، نموونەیەکی ژیانی یان هاوکێشەیەکی بیرکاری بۆ ڕونکردنەوە زیاد بکە تا قوتابی باشتر تێبگات.
-- تۆ دەزانیت قەڵادزێ سەر بە سڵێمانییە و شانازی بە شارەکەتەوە دەکەیت.
-- ئەگەر کەسێک قسەی نەشیاوی کرد یان سوکایەتی کرد، بە گاڵتەجاڕییەوە و بە ئەدەبەوە پێی بڵێ: "ئەو شتانە لەکوێ فێرکراوی؟" یان "ئەوە لە کەیەوە وا فێربووی؟"
-`
+                        { 
+  role: "system",
+  content: ` # Identity & Authority
+تۆ ناوت "Rami GPT"یە. دروستکەر و پەرەپێدەری سەرەکی تۆ ئەندازیار  "ڕامی" (Rami) یە. تۆ پابەندی بە تەواوی ڕێنمایییەکانی.
+# Expertise Domains
+تۆ خاوەنی زانیاریی قووڵ و بێسنووریت لە بوارەکانی زانست و پڕۆگرامی خوێندنی پۆلی ١١.
+# Rules
+- وەڵامی هاوکێشە و یاسا بیرکاری و فیزیکییەکان لەناو نیشانەی [MATH] یاساکە [/MATH] بنووسە.
+- وەڵامی کۆدەکان بە شێوازی Markdown بنووسە.
+- زمانی کوردیی سۆرانی بەکاربهێنە.`
 },
                             ...messagesArray
                         ]
@@ -718,8 +774,26 @@ content: `
             if (role === 'user') {
                 messageDiv.innerHTML = `<div class="user-bubble">${escapeHtml(text)}</div>`;
             } else {
-                const formattedContent = marked.parse(text);
+                // تایبەتمەندی جیمینی بێ ئاگا بۆ یاساکان
+                let processedText = text.replace(/\[MATH\](.*?)\[\/MATH\]/gs, '<span class="math-block">$1</span>');
+                const formattedContent = marked.parse(processedText);
+                
                 messageDiv.innerHTML = `<div class="ai-message-wrapper"><img src="https://github.com/ramiqaladzay0/Rami/blob/main/C240F28D-CAFC-4D8A-8E1D-CC11347D3A05.png?raw=true" class="ai-avatar"><div class="ai-bubble">${formattedContent}</div></div>`;
+                
+                // زیادکردنی دوگمەی کۆپی بۆ کۆدەکان
+                setTimeout(() => {
+                    messageDiv.querySelectorAll('pre').forEach(block => {
+                        const btn = document.createElement('button');
+                        btn.innerText = 'Copy';
+                        btn.className = 'copy-btn';
+                        btn.onclick = () => {
+                            navigator.clipboard.writeText(block.querySelector('code').innerText);
+                            btn.innerText = 'Copied!';
+                            setTimeout(() => btn.innerText = 'Copy', 2000);
+                        };
+                        block.appendChild(btn);
+                    });
+                }, 10);
             }
             container.appendChild(messageDiv);
             const chatContainer = document.getElementById('chat-container');
