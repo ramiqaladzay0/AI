@@ -585,9 +585,7 @@
 
     <footer class="input-area">
         <div class="input-container">
-            <button id="mic-btn" onclick="startRecognition()" class="mic-button">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
-            </button>
+    </button>
             
             <input id="user-input" type="text" 
                    onkeypress="if(event.key === 'Enter') askRami()"
@@ -631,22 +629,6 @@
                 body.setAttribute('data-theme', 'dark');
                 icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
             }
-        }
-
-        window.startRecognition = function() {
-            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-            recognition.lang = 'ku-IQ';
-            const micBtn = document.getElementById('mic-btn');
-            
-            recognition.onstart = () => micBtn.classList.add('recording');
-            recognition.onend = () => micBtn.classList.remove('recording');
-            
-            recognition.onresult = (event) => {
-                const transcript = event.results[0][0].transcript;
-                document.getElementById('user-input').value = transcript;
-            };
-            
-            recognition.start();
         }
 
         window.fillInput = function(text) {
