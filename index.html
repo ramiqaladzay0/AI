@@ -87,67 +87,85 @@
             border-radius: 10px; 
         }
 
-        .user-bubble {
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
-            color: white;
-            border-radius: 20px 20px 4px 20px;
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
-            padding: 12px 20px;
-            max-width: 85%;
-            font-size: 16px;
-        }
+        /* بۆ ئەوەی وەک بێ */
+.user-bubble {
+    background: #2f2f2f !important; /* ڕەنگی خۆڵەمێشی تۆخی جیمینی */
+    color: white;
+    border-radius: 24px !important; /* زۆر خڕتر */
+    padding: 12px 20px;
+    max-width: 85%;
+    box-shadow: none !important; /* سێبەرەکەی لابە */
+}
 
-        .ai-bubble {
-            background: var(--bubble-ai);
-            border: 1px solid var(--border-color);
-            border-radius: 20px 20px 20px 4px;
-            padding: 16px 20px;
-            color: var(--text-color);
-            line-height: 1.6;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            width: 100%;
-        }
+.ai-bubble {
+    background: transparent !important; /* پاشبنەمای لابە وەک جیمینی */
+    border: none !important; /* چوارچێوەی لابە */
+    padding: 16px 0px !important; /* تەنها سەر و خوار پادینگ بێت */
+    box-shadow: none !important;
+    width: 100%;
+}
 
+.ai-message-wrapper {
+    align-items: flex-start !important; /* ئایکۆنەکە بچێتە سەرەوە */
+    gap: 12px;
+}
         /* شێوازی کۆد */
-        pre {
-            background: var(--code-bg);
-            padding: 15px;
-            border-radius: 12px;
-            overflow-x: auto;
-            direction: ltr;
-            position: relative;
-            margin: 10px 0;
-            border: 1px solid var(--border-color);
-        }
+        /* ستایلی پارچە کۆدەکان وەک جیمینی */
+pre {
+    background: #000000 !important; /* ڕەنگی ڕەشی جیمینی */
+    padding: 16px;
+    border-radius: 12px;
+    overflow-x: auto;
+    direction: ltr !important; /* کۆد هەمیشە لە چەپەوەیە */
+    position: relative;
+    margin: 15px 0;
+    border: 1px solid #333;
+    width: 100%; /* بۆ ئەوەی هەموو پاناییەکە بگرێتەوە */
+    display: block;
+}
 
-        code {
-            font-family: 'Consolas', monospace;
-            font-size: 14px;
-        }
+code {
+    font-family: 'Consolas', monospace;
+    font-size: 14px;
+    color: #e5e7eb;
+}
 
-        .copy-btn {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            background: rgba(255,255,255,0.1);
-            border: none;
-            color: #fff;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 10px;
-            cursor: pointer;
-        }
+/* دوگمەی کۆپی وەک جیمینی */
+.copy-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #2f2f2f;
+    border: 1px solid #444;
+    color: #ccc;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    cursor: pointer;
+    z-index: 10;
+    transition: 0.2s;
+}
 
-        /* شێوازی یاسا و هاوکێشەکان */
-        .math-block {
-            background: rgba(59, 130, 246, 0.1);
-            border-right: 4px solid #3b82f6;
-            padding: 10px;
-            margin: 10px 0;
-            font-style: italic;
-            display: block;
-            text-align: center;
-        }
+.copy-btn:hover {
+    background: #444;
+    color: white;
+}
+
+        /pre {
+    background: #000000 !important; /* ڕەشێکی تەواو */
+    border-radius: 8px;
+    border: 1px solid #333;
+    margin-top: 15px;
+}
+
+/* ستایلی هاوکێشەکان وەک جیمینی */
+.math-block {
+    background: transparent !important;
+    border-right: none !important;
+    font-size: 1.2em;
+    padding: 20px;
+    color: var(--text-color);
+}
 
         .ai-bubble p { margin-bottom: 8px; }
         .ai-bubble ul, .ai-bubble ol { padding-right: 25px; margin-bottom: 8px; }
@@ -209,20 +227,25 @@
         }
 
         .input-container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: var(--input-bg);
-            border-radius: 32px;
-            display: flex;
-            align-items: center;
-            padding: 6px 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-            border: 1px solid transparent;
-        }
-        .input-container:focus-within {
-            border-color: var(--border-color);
-            background: #28292a;
-        }
+    max-width: 800px;
+    margin: 0 auto;
+    background: #1e1f20 !important; /* ڕەنگی ڕەشی کاڵی جیمینی */
+    border-radius: 28px !important; /* زۆر خڕ وەک جیمینی */
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+}
+
+[data-theme="light"] .input-container {
+    background: #f0f4f9 !important; /* ڕەنگی لایت مۆدی جیمینی */
+}
+
+.input-container:focus-within {
+    background: #28292a !important;
+    border-color: rgba(255,255,255,0.1);
+}
         [data-theme="light"] .input-container:focus-within { background: #e9eef6; }
 
         .input-container input {
@@ -235,25 +258,28 @@
             font-size: 16px;
         }
 
-        .send-button, .mic-button {
-            background: transparent;
-            color: var(--text-color);
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s;
-        }
-        .send-button:hover, .mic-button:hover {
-            background: rgba(255,255,255,0.1);
-        }
-        [data-theme="light"] .send-button:hover { background: rgba(0,0,0,0.05); }
+        .send-button {
+    background: transparent !important;
+    color: #8ab4f8 !important; /* شینی جیمینی */
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
 
-        .send-button svg { width: 24px; height: 24px; color: #8ab4f8; }
+.send-button:hover {
+    background: rgba(138, 180, 248, 0.1) !important;
+}
+
+.send-button svg {
+    width: 24px;
+    height: 24px;
+}
 
         header {
             padding: 20px;
@@ -522,28 +548,23 @@
         /* ستایلی سەرەکی باکسەکە - لێرەدا Variable بەکاردێنین */
 #user-input {
     width: 100%;
-    min-height: 48px;
+    min-height: 24px;
     max-height: 200px;
-    padding: 12px 18px;
-    border-radius: 24px;
+    padding: 10px 12px;
     resize: none;
     overflow-y: auto;
     font-size: 16px;
     line-height: 1.5;
-    transition: all 0.3s ease;
-    
-    /* گرنگترین بەش: لێرە ڕەنگەکە لە :root وەردەگرێت */
-    background-color: var(--input-bg) !important;
+    background: transparent !important; /* پاشبنەمای لادە بۆ ئەوەی وەک جیمینی بێت */
     color: var(--text-color) !important;
-    border: 1px solid var(--border-color) !important;
+    border: none !important; /* هەموو چوارچێوەکەی لابە */
+    outline: none !important;
 }
 
-/* کاتێک کلیکی تێدا دەکەیت */
 #user-input:focus {
-    outline: none;
-    border-color: #3b82f6 !important;
-    /* لە کاتی فۆکەس کەمێک ڕووناکتر بێتەوە */
-    filter: brightness(1.1);
+    outline: none !important;
+    border: none !important;
+    box-shadow: none !important; /* هیچی دەور نەمێنێت لە کاتی کلیک کردن */
 }
 
 /* ئەگەر ویستت لە کاتی لایت مۆد ستایلێکی تایبەتتری هەبێت */
@@ -552,7 +573,17 @@
     border-color: #d1d5db !important;
 }
 
+@keyframes fadeInGemini {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
     </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+
 </head>
 <body data-theme="dark">
 
@@ -646,7 +677,7 @@
         const SB_KEY = "sb_publishable_ZxYk00BEcHCGFATy2SxegA_mrw6d32R";
         const supabase = window.supabase.createClient(SB_URL, SB_KEY);
 
-        const GROQ_API_KEY = "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";
+        const GROQ_API_KEY = "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";
         const SHEET_URL = "https://script.google.com/macros/s/AKfycbw9BstYmzi4yyvDYvKtQX0fJNkz50aWFVrDfFtdqleFYYBkNODXl3ZSWBqZZM8Bl2cljA/exec";
         
         let currentChatId = null;
@@ -747,26 +778,13 @@
                         messages: [
                         { 
   role: "system",
-  content: ` # Identity & Authority
-تۆ ناوت "Rami GPT"یە. دروستکەر و پەرەپێدەری سەرەکی تۆ ئەندازیار  "ڕامی" (Rami) یە. تۆ پابەندی بە تەواوی ڕێنمایییەکانی.
-# Expertise Domains
-تۆ خاوەنی زانیاریی قووڵ و بێسنووریت لە بوارەکانی زانست و پڕۆگرامی خوێندنی پۆلی ١١.
-# Database on the table
-تۆ ڕاوێژکارێکی ئەکادیمی لە زانستی داتابەیس. ئەرکی سەرەکیت ئەوەیە باسی چۆنیەتی دیزاینکردن و دروستکردنی داتابەیسی نوێ بکەیت لەسەر بنەمای خشتەکان (Tables).
-> ڕێنماییەکان بۆ وەڵامدانەوە:
-> ١. تەنها باس (Concept): تەنها باس لە بیرۆکە و لۆژیکی دروستکردنی خشتەکان بکە. بە هیچ شێوەیەک کۆدی وەک (SQL) یان هیچ خانەیەکی تەکنیکی و پرۆگرامسازی بەکارمەهێنە.
-> ٢. باسی تەیبڵ: جەخت بکەرەوە لەسەر ئەوەی چۆن داتاکان لەناو خشتەدا ڕێکدەخرێن، سوودی ستوون (Column) و ڕیز (Row) چییە، و کلیلەکان (Primary Keys) چۆن کار دەکەن.
-> ٣. هەمەجۆری: هەر جارێک کە بەکارهێنەر داوای داتابەیسێکی نوێ دەکات، بابەتێکی جیاواز وەک نموونە بهێنەوە (بۆ نموونە: جارێک سیستەمی کۆگا، جارێک گەشتوگوزار، جارێک تەندروستی) بۆ ئەوەی وەڵامەکانت دووبارە نەبنەوە.
-> ٤. درێژی بابەت: وەڵامەکانت کورت و پوخت بن (لە سێ بۆ چوار بڕگە تێنەپەڕێت) بۆ ئەوەی خوێنەر لێی بێزار نەبێت.
-> ٥. کوالێتی: وەڵامەکانت وەک ڕاپۆرتێکی زانستی سادە بنووسە کە گونجاو بێت بۆ ئاستی زانکۆ یان پەیمانگا بەبێ بەکارهێنانی کۆد."
-> 
-ئەم پڕۆمێتە چۆن وێبسایتەکەت دەگۆڕێت؟
-ئەگەر ئێستا کەسێک لە وێبسایتەکەت بنووسێت "داتابەیسێکم بۆ دروست بکە"، ئەی ئایەکە بەم شێوەیە وەڵام دەداتەوە:
- * جارێک دەڵێت: "بۆ دروستکردنی داتابەیسێکی نوێی فرۆشگا، سەرەتا پێویستە خشتەیەکی تایبەت بە کاڵاکان دابڕێژین کە تێیدا ناوی هەر کاڵایەک و نرخەکەی جێگیر بکرێت..."
- # Rules
-- وەڵامی هاوکێشە و یاسا بیرکاری و فیزیکییەکان لەناو نیشانەی [MATH] یاساکە [/MATH] بنووسە.
-- وەڵامی کۆدەکان بە شێوازی Markdown بنووسە.
-- زمانی کوردیی سۆرانی بەکاربهێنە.`
+  content: `تۆ (Rami GPT)یت، یاریدەدەرێکی ژیری دەستکردی  کە لەلایەن "ڕامی" گەشەی پێدراوە. خاوەنی بنکەیەکی زانیاریی بێسنووریت لە هەموو بوارەکاندا (زانست، مێژوو، تەکنەلۆژیا، ئایین، و هونەر).
+> ڕێسا بنەڕەتییەکانت:
+١. گشتگیری: نابێت هیچ پرسیارێک بێ وەڵام جێبهێڵیت مەگەر پێچەوانەی یاسا ئەخلاقییە گشتییەکان بێت. پێویستە وەک "زانستنامەیەک" وەڵامی ورد و نوێ بدەیتەوە کە لەگەڵ داتاکانی گووگڵ و سەرچاوە جیهانییەکان یەکبگرێتەوە.
+٢. شارەزایی پۆلی ١١: لەبەر ئەوەی دروستکەرەکەت (ڕامی) خوێندکاری پۆلی ١١ی زانستییە، پێویستە لە بابەتەکانی زانستی (زیندەزانی، ،کۆمپیتەر، کوردی، عربی، ئینگلیزی، فیزیا، کیمیا، بیرکاری) هاوکارییەکی زۆر وردی خوێندکاران بکەیت وەک مامۆستایەکی پسپۆڕ.
+٣. شێوازی نووسین: وەڵامەکانت بە زمانی کوردیی سۆرانییەکی پاراو و هاوچەرخ بێت. بۆ بابەتە ئاڵۆزەکان خاڵبەندی (Bullet points) بەکاربهێنە بۆ ئەوەی خوێنەر بە ئاسانی لێت تێبگات.
+٤. کۆد و بیرکاری: هەموو کۆدەکان بە Markdown بنووسە. هەموو هاوکێشە بیرکاری و فیزیکییەکان لەنێوان تاگی [MATH] [/MATH] دابنێ.
+٥. کەسایەتی: تۆ هاوڕێیانە، زیرەک، و ڕاستگۆیت. ئەگەر بابەتێک مشتومڕاوی بوو، هەموو لایەنەکانی باس بکە بەبێ لایەنگری`
 },
                             ...messagesArray
                         ]
@@ -804,37 +822,67 @@ inputField.addEventListener('keydown', function(event) {
         }
 
         function appendMessage(role, text) {
-            const container = document.getElementById('messages-wrapper');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${role}`;
-            if (role === 'user') {
-                messageDiv.innerHTML = `<div class="user-bubble">${escapeHtml(text)}</div>`;
-            } else {
-                // تایبەتمەندی جیمینی بێ ئاگا بۆ یاساکان
-                let processedText = text.replace(/\[MATH\](.*?)\[\/MATH\]/gs, '<span class="math-block">$1</span>');
-                const formattedContent = marked.parse(processedText);
-                
-                messageDiv.innerHTML = `<div class="ai-message-wrapper"><img src="https://github.com/ramiqaladzay0/Rami/blob/main/C240F28D-CAFC-4D8A-8E1D-CC11347D3A05.png?raw=true" class="ai-avatar"><div class="ai-bubble">${formattedContent}</div></div>`;
-                
-                // زیادکردنی دوگمەی کۆپی بۆ کۆدەکان
-                setTimeout(() => {
-                    messageDiv.querySelectorAll('pre').forEach(block => {
-                        const btn = document.createElement('button');
-                        btn.innerText = 'Copy';
-                        btn.className = 'copy-btn';
-                        btn.onclick = () => {
-                            navigator.clipboard.writeText(block.querySelector('code').innerText);
-                            btn.innerText = 'Copied!';
-                            setTimeout(() => btn.innerText = 'Copy', 2000);
-                        };
-                        block.appendChild(btn);
-                    });
-                }, 10);
+    const container = document.getElementById('messages-wrapper');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${role}`;
+    
+    if (role === 'user') {
+        messageDiv.innerHTML = `<div class="user-bubble">${escapeHtml(text)}</div>`;
+    } else {
+        // ۱. چارەسەرکردنی هاوکێشەکان
+        let processedText = text.replace(/\[MATH\](.*?)\[\/MATH\]/gs, (match, formula) => {
+            try {
+                return katex.renderToString(formula, { throwOnError: false, displayMode: true });
+            } catch (e) {
+                return formula;
             }
-            container.appendChild(messageDiv);
-            const chatContainer = document.getElementById('chat-container');
-            chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
-        }
+        });
+
+        const formattedContent = marked.parse(processedText);
+        
+        // ۲. پێکهاتەی وەڵام - لێرەدا width: 100% مان زیاد کردووە بۆ ئەوەی کۆدەکان پان ببنەوە
+        messageDiv.innerHTML = `
+            <div class="ai-message-wrapper" style="display: flex; gap: 12px; width: 100%;">
+                <img src="https://github.com/ramiqaladzay0/Rami/blob/main/C240F28D-CAFC-4D8A-8E1D-CC11347D3A05.png?raw=true" 
+                     class="ai-avatar" style="border-radius: 50%; width: 36px; height: 36px; flex-shrink: 0;">
+                <div class="ai-bubble markdown-body" style="flex: 1; min-width: 0;">${formattedContent}</div>
+            </div>`;
+    }
+
+    // ۳. گرنگ: سەرەتا دەبێت نامەکە زیاد بکرێت بۆ لاپەڕەکە
+    container.appendChild(messageDiv);
+
+    // ٤. پاشان دوگمەی کۆپی بۆ کۆدەکان دروست دەکرێت
+    if (role === 'assistant') {
+        setTimeout(() => {
+            messageDiv.querySelectorAll('pre').forEach(block => {
+                if (!block.querySelector('.copy-btn')) {
+                    const btn = document.createElement('button');
+                    btn.innerText = 'Copy';
+                    btn.className = 'copy-btn';
+                    
+                    btn.onclick = () => {
+                        const codeElement = block.querySelector('code');
+                        const textToCopy = codeElement ? codeElement.innerText : block.innerText.replace('Copy', '');
+                        
+                        navigator.clipboard.writeText(textToCopy.trim()).then(() => {
+                            btn.innerText = 'Copied! ✅';
+                            btn.style.background = '#10b981';
+                            setTimeout(() => {
+                                btn.innerText = 'Copy';
+                                btn.style.background = ''; // دەگەڕێتەوە بۆ ستایلی ناو CSS
+                            }, 2000);
+                        });
+                    };
+                    block.appendChild(btn);
+                }
+            });
+        }, 100);
+    }
+
+    const chatContainer = document.getElementById('chat-container');
+    chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
+}
 
         function appendLoading() {
             const id = 'loading-' + Date.now();
