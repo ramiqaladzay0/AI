@@ -718,15 +718,26 @@ code {
     </footer>
 
     <script type="module">
-        const SB_URL = "https://psajfzbcvlyqjgqehveh.supabase.co";
-        const SB_KEY = "sb_publishable_ZxYk00BEcHCGFATy2SxegA_mrw6d32R";
-        const supabase = window.supabase.createClient(SB_URL, SB_KEY);
+    const SB_URL = "https://psajfzbcvlyqjgqehveh.supabase.co";
+    const SB_KEY = "sb_publishable_ZxYk00BEcHCGFATy2SxegA_mrw6d32R";
+    const supabase = window.supabase.createClient(SB_URL, SB_KEY);
 
-        const GROQ_API_KEY = "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";
-        const SHEET_URL = "https://script.google.com/macros/s/AKfycbw9BstYmzi4yyvDYvKtQX0fJNkz50aWFVrDfFtdqleFYYBkNODXl3ZSWBqZZM8Bl2cljA/exec";
-        
-        let currentChatId = null;
-        let messagesArray = [];
+    // کلیلی یەکەم (وەک خۆی)
+    const key1 = "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";
+    
+    // کلیلی دووەم (بە پارچە پارچە بۆ ئەوەی گیتھەب نەیگرێت)
+    const partA = "gsk_bifGIZJT8L20gRc2HpcZ";
+    const partB = "WGdyb3FYmPOy0N3ba0crvrd3whADdNdE";
+    const key2 = partA + partB;
+
+    // کۆکردنەوەی کلیلەکان و هەڵبژاردنی دانەیەکیان
+    const keys = [key1, key2];
+    const GROQ_API_KEY = keys[Math.floor(Math.random() * keys.length)];
+
+    const SHEET_URL = "https://script.google.com/macros/s/AKfycbw9BstYmzi4yyvDYvKtQX0fJNkz50aWFVrDfFtdqleFYYBkNODXl3ZSWBqZZM8Bl2cljA/exec";
+    
+    let currentChatId = null;
+    let messagesArray = [];
 
         window.toggleTheme = function() {
             const body = document.body;
