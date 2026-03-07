@@ -1,4 +1,3 @@
 User-agent: *
 Allow: /
-
-Sitemap: https://ramiqaladzay0.github.io/AI/sitemap.xml
+Sitemap: https://ramigpt.run.place/sitemap.xml
